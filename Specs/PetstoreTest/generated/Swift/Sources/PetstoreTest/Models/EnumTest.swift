@@ -8,38 +8,6 @@ import JSONUtilities
 
 public class EnumTest: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    public enum EnumInteger: Int {
-        case _1 = 1
-        case negative1 = -1
-
-        public static let cases: [EnumInteger] = [
-          ._1,
-          .negative1,
-        ]
-    }
-
-    public enum EnumNumber: Double {
-        case _11 = 1.1
-        case negative12 = -1.2
-
-        public static let cases: [EnumNumber] = [
-          ._11,
-          .negative12,
-        ]
-    }
-
-    public enum EnumString: String {
-        case upper = "UPPER"
-        case lower = "lower"
-        case lessThannullgreaterThan = "<null>"
-
-        public static let cases: [EnumString] = [
-          .upper,
-          .lower,
-          .lessThannullgreaterThan,
-        ]
-    }
-
     public var enumInteger: EnumInteger?
 
     public var enumNumber: EnumNumber?
@@ -83,4 +51,40 @@ public class EnumTest: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension EnumTest {
+
+    public enum EnumInteger: Int {
+        case _1 = 1
+        case negative1 = -1
+
+        public static let cases: [EnumInteger] = [
+          ._1,
+          .negative1,
+        ]
+    }
+
+    public enum EnumNumber: Double {
+        case _11 = 1.1
+        case negative12 = -1.2
+
+        public static let cases: [EnumNumber] = [
+          ._11,
+          .negative12,
+        ]
+    }
+
+    public enum EnumString: String {
+        case upper = "UPPER"
+        case lower = "lower"
+        case lessThannullgreaterThan = "<null>"
+
+        public static let cases: [EnumString] = [
+          .upper,
+          .lower,
+          .lessThannullgreaterThan,
+        ]
+    }
+
 }

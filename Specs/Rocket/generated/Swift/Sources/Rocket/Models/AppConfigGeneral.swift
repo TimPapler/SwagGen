@@ -12,7 +12,7 @@ public class AppConfigGeneral: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var currencyCode: String?
 
     /** A map of custom configuration fields. */
-    public var customFields: [String: Any]?
+    public var customFields: AnonymousType?
 
     /** A Google Analytics token to track applicaton user events. */
     public var gaToken: String?
@@ -26,7 +26,7 @@ public class AppConfigGeneral: JSONDecodable, JSONEncodable, PrettyPrintable {
     /** The url of the primary website. */
     public var websiteUrl: URL?
 
-    public init(currencyCode: String? = nil, customFields: [String: Any]? = nil, gaToken: String? = nil, itemImageTypes: [String: String]? = nil, stripeKey: String? = nil, websiteUrl: URL? = nil) {
+    public init(currencyCode: String? = nil, customFields: AnonymousType? = nil, gaToken: String? = nil, itemImageTypes: [String: String]? = nil, stripeKey: String? = nil, websiteUrl: URL? = nil) {
         self.currencyCode = currencyCode
         self.customFields = customFields
         self.gaToken = gaToken

@@ -8,17 +8,6 @@ import JSONUtilities
 
 public class AccessToken: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    /** The type of the token. */
-    public enum `Type`: String {
-        case userAccount = "UserAccount"
-        case userProfile = "UserProfile"
-
-        public static let cases: [`Type`] = [
-          .userAccount,
-          .userProfile,
-        ]
-    }
-
     /** The token value used for authenticated requests. */
     public var value: String
 
@@ -58,4 +47,19 @@ public class AccessToken: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension AccessToken {
+
+    /** The type of the token. */
+    public enum `Type`: String {
+        case userAccount = "UserAccount"
+        case userProfile = "UserProfile"
+
+        public static let cases: [`Type`] = [
+          .userAccount,
+          .userProfile,
+        ]
+    }
+
 }

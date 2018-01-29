@@ -8,19 +8,6 @@ import JSONUtilities
 
 public class Order: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    /** Order Status */
-    public enum Status: String {
-        case placed = "placed"
-        case approved = "approved"
-        case delivered = "delivered"
-
-        public static let cases: [Status] = [
-          .placed,
-          .approved,
-          .delivered,
-        ]
-    }
-
     public var complete: Bool?
 
     public var id: Int?
@@ -79,4 +66,21 @@ public class Order: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension Order {
+
+    /** Order Status */
+    public enum Status: String {
+        case placed = "placed"
+        case approved = "approved"
+        case delivered = "delivered"
+
+        public static let cases: [Status] = [
+          .placed,
+          .approved,
+          .delivered,
+        ]
+    }
+
 }

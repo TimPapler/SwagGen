@@ -9,27 +9,6 @@ import JSONUtilities
 /** Represents a disruption to a route within the transport network. */
 public class Disruption: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    /** Gets or sets the category of this dispruption. */
-    public enum Category: String {
-        case undefined = "Undefined"
-        case realTime = "RealTime"
-        case plannedWork = "PlannedWork"
-        case information = "Information"
-        case event = "Event"
-        case crowding = "Crowding"
-        case statusAlert = "StatusAlert"
-
-        public static let cases: [Category] = [
-          .undefined,
-          .realTime,
-          .plannedWork,
-          .information,
-          .event,
-          .crowding,
-          .statusAlert,
-        ]
-    }
-
     /** Gets or sets the additionaInfo of this disruption. */
     public var additionalInfo: String?
 
@@ -138,4 +117,29 @@ public class Disruption: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension Disruption {
+
+    /** Gets or sets the category of this dispruption. */
+    public enum Category: String {
+        case undefined = "Undefined"
+        case realTime = "RealTime"
+        case plannedWork = "PlannedWork"
+        case information = "Information"
+        case event = "Event"
+        case crowding = "Crowding"
+        case statusAlert = "StatusAlert"
+
+        public static let cases: [Category] = [
+          .undefined,
+          .realTime,
+          .plannedWork,
+          .information,
+          .event,
+          .crowding,
+          .statusAlert,
+        ]
+    }
+
 }

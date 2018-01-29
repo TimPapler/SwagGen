@@ -11,7 +11,7 @@ public class TokenObject: JSONDecodable, JSONEncodable, PrettyPrintable {
     /** The Token ID */
     public var token: String
 
-    public var idp: [String: Any]
+    public var idp: Idp
 
     /** The Token type */
     public var type: String
@@ -22,7 +22,7 @@ public class TokenObject: JSONDecodable, JSONEncodable, PrettyPrintable {
 
     public var uses: Double?
 
-    public init(token: String, idp: [String: Any], type: String, expiration: Date? = nil, remainingCredits: Double? = nil, uses: Double? = nil) {
+    public init(token: String, idp: Idp, type: String, expiration: Date? = nil, remainingCredits: Double? = nil, uses: Double? = nil) {
         self.token = token
         self.idp = idp
         self.type = type
@@ -43,7 +43,7 @@ public class TokenObject: JSONDecodable, JSONEncodable, PrettyPrintable {
     public func encode() -> JSONDictionary {
         var dictionary: JSONDictionary = [:]
         dictionary["token"] = token
-        dictionary["idp"] = idp
+        dictionary["idp"] = idp.encode()
         dictionary["type"] = type
         if let expiration = expiration?.encode() {
             dictionary["expiration"] = expiration
@@ -61,4 +61,20 @@ public class TokenObject: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension TokenObject {
+
+    
+    public struct Idp: Codable {
+        
+        public var code: String?
+        public var description: String?
+
+        public init(code: String? = nil, description: String? = nil) {
+            self.code = code
+            self.description = description
+        }
+    }
+
 }

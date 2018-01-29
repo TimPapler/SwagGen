@@ -32,7 +32,11 @@ public class CodeFormatter {
 
         context["raw"] = spec.json
         enums = spec.enums
-        context["enums"] = enums.map(getEnumContext)
+        let x = enums.map(getEnumContext)
+        context["enums"] = x
+        context["nonGlobalEnums"] = x.filter { let isGlobal = $0["isGlobal"] as? Bool ?? false
+            return !isGlobal
+        }
         context["paths"] = spec.paths.map(getPathContext)
         context["operations"] = spec.operations.map(getOperationContext)
         context["tags"] = spec.tags
@@ -109,8 +113,15 @@ public class CodeFormatter {
         context["optionalProperties"] = schema.optionalProperties.map(getPropertyContext)
         context["properties"] = schema.properties.map(getPropertyContext)
         context["allProperties"] = schema.parentProperties.map(getPropertyContext)
-        context["enums"] = schema.enums.map(getEnumContext)
-
+        let x = schema.enums.map(getEnumContext)
+        context["enums"] = x
+        context["nonGlobalEnums"] = x.filter { let isGlobal = $0["isGlobal"] as? Bool ?? false
+            return !isGlobal
+        }
+        
+        context["inlinedObjects"] = schema.inlinedObjects.map({ (schema) -> Context in
+            self.getInlineSchemaContext(schema)
+        })
         return context
     }
 
@@ -186,8 +197,11 @@ public class CodeFormatter {
         if Set(failureTypes).count == 1 {
             context["singleFailureType"] = failureTypes.first
         }
-
-        context["enums"] = operation.enums.map(getEnumContext)
+        let x = operation.enums.map(getEnumContext)
+        context["enums"] = x
+        context["nonGlobalEnums"] = x.filter { let isGlobal = $0["isGlobal"] as? Bool ?? false
+            return !isGlobal
+        }
         context["requestEnums"] = operation.requestEnums.map(getEnumContext)
         context["responseEnums"] = operation.responseEnums.map(getEnumContext)
 
@@ -256,7 +270,11 @@ public class CodeFormatter {
 
         return context
     }
-
+    func getInlineSchemaContext(_ object: InlineObject) -> Context {
+        var context: Context = getSchemaContext(object.schema)
+        context["inlineName"] = getOnnerObjectTypeType(object.name)
+        return context
+    }
     func getEnumContext(_ enumValue: Enum) -> Context {
         var context: Context = [:]
 
@@ -329,6 +347,10 @@ public class CodeFormatter {
     }
 
     func getEnumTypeType(_ name: String) -> String {
+        return escapeType(name.upperCamelCased())
+    }
+    
+    func getOnnerObjectTypeType(_ name: String) -> String {
         return escapeType(name.upperCamelCased())
     }
 

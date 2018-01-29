@@ -8,48 +8,6 @@ import JSONUtilities
 
 public class InstructionStep: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    public enum SkyDirectionDescription: String {
-        case north = "North"
-        case northEast = "NorthEast"
-        case east = "East"
-        case southEast = "SouthEast"
-        case south = "South"
-        case southWest = "SouthWest"
-        case west = "West"
-        case northWest = "NorthWest"
-
-        public static let cases: [SkyDirectionDescription] = [
-          .north,
-          .northEast,
-          .east,
-          .southEast,
-          .south,
-          .southWest,
-          .west,
-          .northWest,
-        ]
-    }
-
-    public enum TrackType: String {
-        case cycleSuperHighway = "CycleSuperHighway"
-        case canalTowpath = "CanalTowpath"
-        case quietRoad = "QuietRoad"
-        case provisionForCyclists = "ProvisionForCyclists"
-        case busyRoads = "BusyRoads"
-        case none = "None"
-        case pushBike = "PushBike"
-
-        public static let cases: [TrackType] = [
-          .cycleSuperHighway,
-          .canalTowpath,
-          .quietRoad,
-          .provisionForCyclists,
-          .busyRoads,
-          .none,
-          .pushBike,
-        ]
-    }
-
     public var cumulativeDistance: Int?
 
     public var cumulativeTravelTime: Int?
@@ -156,4 +114,50 @@ public class InstructionStep: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension InstructionStep {
+
+    public enum SkyDirectionDescription: String {
+        case north = "North"
+        case northEast = "NorthEast"
+        case east = "East"
+        case southEast = "SouthEast"
+        case south = "South"
+        case southWest = "SouthWest"
+        case west = "West"
+        case northWest = "NorthWest"
+
+        public static let cases: [SkyDirectionDescription] = [
+          .north,
+          .northEast,
+          .east,
+          .southEast,
+          .south,
+          .southWest,
+          .west,
+          .northWest,
+        ]
+    }
+
+    public enum TrackType: String {
+        case cycleSuperHighway = "CycleSuperHighway"
+        case canalTowpath = "CanalTowpath"
+        case quietRoad = "QuietRoad"
+        case provisionForCyclists = "ProvisionForCyclists"
+        case busyRoads = "BusyRoads"
+        case none = "None"
+        case pushBike = "PushBike"
+
+        public static let cases: [TrackType] = [
+          .cycleSuperHighway,
+          .canalTowpath,
+          .quietRoad,
+          .provisionForCyclists,
+          .busyRoads,
+          .none,
+          .pushBike,
+        ]
+    }
+
 }

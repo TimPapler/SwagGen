@@ -164,16 +164,16 @@ public class SwiftFormatter: CodeFormatter {
                 return checkEnum ? "[\(enumValue ?? typeString)]" : typeString
             }
         case let .object(schema):
-            //            if schema.properties.isEmpty {
-            switch schema.additionalProperties {
-            case .bool: return "[String: Any]"
-            case let .schema(schema):
-                let typeString = getSchemaType(name: name, schema: schema, checkEnum: checkEnum)
-                return checkEnum ? "[String: \(enumValue ?? typeString)]" : typeString
+            if schema.properties.isEmpty {
+                switch schema.additionalProperties {
+                case .bool: return "AnonymousType"
+                case let .schema(schema):
+                    let typeString = getSchemaType(name: name, schema: schema, checkEnum: checkEnum)
+                    return checkEnum ? "[String: \(enumValue ?? typeString)]" : typeString
+                }
+            } else {
+                return getModelType(name)
             }
-        //            } else {
-        //                return getModelType(name)
-        //            }
         case let .reference(reference): return escapeType(reference.name.upperCamelCased())
         case .allOf: return "UNKNOWN_ALL_OFF"
         case .any: return "UNKNOWN_ANY"
@@ -224,7 +224,7 @@ public class SwiftFormatter: CodeFormatter {
     func getEncodedValue(name: String, type: String) -> String {
         var encodedValue = name
 
-        let jsonTypes = ["Any", "[String: Any]", "Int", "String", "Float", "Double", "Bool"]
+        let jsonTypes = ["Any", "AnonymousType", "Int", "String", "Float", "Double", "Bool"]
 
         if !jsonTypes.contains(type) && !jsonTypes.map({ "[\($0)]" }).contains(type) && !jsonTypes.map({ "[String: \($0)]" }).contains(type) {
             if type.hasPrefix("[[") {

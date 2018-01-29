@@ -8,16 +8,6 @@ import JSONUtilities
 
 public class SearchCriteria: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    public enum DateTimeType: String {
-        case arriving = "Arriving"
-        case departing = "Departing"
-
-        public static let cases: [DateTimeType] = [
-          .arriving,
-          .departing,
-        ]
-    }
-
     public var dateTime: Date?
 
     public var dateTimeType: DateTimeType?
@@ -54,4 +44,18 @@ public class SearchCriteria: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension SearchCriteria {
+
+    public enum DateTimeType: String {
+        case arriving = "Arriving"
+        case departing = "Departing"
+
+        public static let cases: [DateTimeType] = [
+          .arriving,
+          .departing,
+        ]
+    }
+
 }
