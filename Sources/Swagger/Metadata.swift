@@ -9,6 +9,8 @@ public struct Metadata {
     public let nullable: Bool
     public let example: Any?
     public var json: JSONDictionary
+    public let parametarizedTyoes: String?
+    public let parametarizedTyoeT: String?
 }
 
 extension Metadata: JSONObjectConvertible {
@@ -21,6 +23,8 @@ extension Metadata: JSONObjectConvertible {
         enumeratedValues = jsonDictionary["enum"] as? [Any]
         nullable = (jsonDictionary.json(atKeyPath: "x-nullable")) ?? false
         example = jsonDictionary.json(atKeyPath: "example")
+        parametarizedTyoes = jsonDictionary.json(atKeyPath: "x-parametarized-tyoe")
+        parametarizedTyoeT = jsonDictionary.json(atKeyPath: "x-parametarized-tyoe-T")
         json = jsonDictionary
     }
 }

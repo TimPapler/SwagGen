@@ -49,3 +49,6 @@ templateFiles:
     destination: "Sources/{{ options.name }}/APIResult.swift"
   - path: RequestBehaviour.swift
     destination: "Sources/{{ options.name }}/RequestBehaviour.swift"
+  - path: RequestBehaviour.swift
+    destination: "Sources/{{ options.name }}/AnonymousType.swift"
+

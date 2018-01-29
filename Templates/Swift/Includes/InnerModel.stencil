@@ -1,0 +1,38 @@
+
+{% if description %}
+/** {{ description }} */
+{% endif %}
+{% if enum %}
+{% include "Includes/enum.stencil" using enum %}
+{% elif aliasType %}
+public typealias {{ type }} = {{ aliasType }}
+{% elif additionalPropertiesType and allProperties.count == 0 %}
+public typealias {{ type }} = [String: {{ additionalPropertiesType }}]
+{% else %}
+public struct {{ inlineName }}: {% if parent %}{{ parent.type }}{% else %}Codable{% endif %} {
+    {% for enum in enums %}
+    {% if not enum.isGlobal %}
+    {% include "Includes/enum.stencil" using enum %}
+    {% endif %}
+    {% endfor %}
+    {% for inlinedObject in inlinedObjects %} 
+    {% include "Includes/model.stencil" using inlinedObject %}
+    {% endfor %}
+    
+    {% for property in properties %}
+    {% if property.description %}
+    /** {{ property.description }} */
+    {% endif %}
+    public var {{ property.name }}: {{ property.optionalType }}
+    {% endfor %}
+
+    public init({% for property in allProperties %}{{ property.name }}: {{ property.optionalType }}{% ifnot property.required %} = nil{% endif %}{% ifnot forloop.last %}, {% endif %}{% endfor %}) {
+        {% for property in properties %}
+        self.{{ property.name }} = {{ property.name }}
+        {% endfor %}
+        {% if parent %}
+        super.init({% for property in parent.properties %}{{ property.name }}: {{ property.name }}{% ifnot forloop.last %}, {% endif %}{% endfor %})
+        {% endif %}
+    }
+}
+{% endif %}

@@ -8,23 +8,6 @@ import JSONUtilities
 
 public class Subscription: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    /** The status of a subscription. */
-    public enum Status: String {
-        case active = "Active"
-        case cancelled = "Cancelled"
-        case lapsed = "Lapsed"
-        case expired = "Expired"
-        case none = "None"
-
-        public static let cases: [Status] = [
-          .active,
-          .cancelled,
-          .lapsed,
-          .expired,
-          .none,
-        ]
-    }
-
     /** The unique subscription code. */
     public var code: String
 
@@ -82,4 +65,25 @@ property will not exist.
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension Subscription {
+
+    /** The status of a subscription. */
+    public enum Status: String {
+        case active = "Active"
+        case cancelled = "Cancelled"
+        case lapsed = "Lapsed"
+        case expired = "Expired"
+        case none = "None"
+
+        public static let cases: [Status] = [
+          .active,
+          .cancelled,
+          .lapsed,
+          .expired,
+          .none,
+        ]
+    }
+
 }

@@ -8,18 +8,6 @@ import JSONUtilities
 
 public class EmissionsSurchargeVehicle: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    public enum Compliance: String {
-        case notCompliant = "NotCompliant"
-        case compliant = "Compliant"
-        case exempt = "Exempt"
-
-        public static let cases: [Compliance] = [
-          .notCompliant,
-          .compliant,
-          .exempt,
-        ]
-    }
-
     public var colour: String?
 
     public var compliance: Compliance?
@@ -77,4 +65,20 @@ public class EmissionsSurchargeVehicle: JSONDecodable, JSONEncodable, PrettyPrin
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension EmissionsSurchargeVehicle {
+
+    public enum Compliance: String {
+        case notCompliant = "NotCompliant"
+        case compliant = "Compliant"
+        case exempt = "Exempt"
+
+        public static let cases: [Compliance] = [
+          .notCompliant,
+          .compliant,
+          .exempt,
+        ]
+    }
+
 }

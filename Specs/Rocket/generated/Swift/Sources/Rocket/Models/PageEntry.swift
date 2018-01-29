@@ -12,31 +12,6 @@ Also defines what visual template should be used to render that content.
  */
 public class PageEntry: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    /** The type of PageEntry. Used to help identify what type of content will be presented. */
-    public enum `Type`: String {
-        case itemEntry = "ItemEntry"
-        case itemDetailEntry = "ItemDetailEntry"
-        case listEntry = "ListEntry"
-        case listDetailEntry = "ListDetailEntry"
-        case userEntry = "UserEntry"
-        case textEntry = "TextEntry"
-        case imageEntry = "ImageEntry"
-        case customEntry = "CustomEntry"
-        case peopleEntry = "PeopleEntry"
-
-        public static let cases: [`Type`] = [
-          .itemEntry,
-          .itemDetailEntry,
-          .listEntry,
-          .listDetailEntry,
-          .userEntry,
-          .textEntry,
-          .imageEntry,
-          .customEntry,
-          .peopleEntry,
-        ]
-    }
-
     /** The unique identifier for a page entry. */
     public var id: String
 
@@ -50,7 +25,7 @@ public class PageEntry: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var template: String
 
     /** A map of custom fields defined by a curator for a page entry. */
-    public var customFields: [String: Any]?
+    public var customFields: AnonymousType?
 
     /** The images for the page entry if any.
 
@@ -70,7 +45,7 @@ For example the images of an `ImageEntry`.
     /** If 'type' is 'TextEntry' then this is the text to be represented. */
     public var text: String?
 
-    public init(id: String, type: `Type`, title: String, template: String, customFields: [String: Any]? = nil, images: [String: URL]? = nil, item: ItemSummary? = nil, list: ItemList? = nil, people: [Person]? = nil, text: String? = nil) {
+    public init(id: String, type: `Type`, title: String, template: String, customFields: AnonymousType? = nil, images: [String: URL]? = nil, item: ItemSummary? = nil, list: ItemList? = nil, people: [Person]? = nil, text: String? = nil) {
         self.id = id
         self.type = type
         self.title = title
@@ -127,4 +102,33 @@ For example the images of an `ImageEntry`.
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension PageEntry {
+
+    /** The type of PageEntry. Used to help identify what type of content will be presented. */
+    public enum `Type`: String {
+        case itemEntry = "ItemEntry"
+        case itemDetailEntry = "ItemDetailEntry"
+        case listEntry = "ListEntry"
+        case listDetailEntry = "ListDetailEntry"
+        case userEntry = "UserEntry"
+        case textEntry = "TextEntry"
+        case imageEntry = "ImageEntry"
+        case customEntry = "CustomEntry"
+        case peopleEntry = "PeopleEntry"
+
+        public static let cases: [`Type`] = [
+          .itemEntry,
+          .itemDetailEntry,
+          .listEntry,
+          .listDetailEntry,
+          .userEntry,
+          .textEntry,
+          .imageEntry,
+          .customEntry,
+          .peopleEntry,
+        ]
+    }
+
 }

@@ -8,16 +8,6 @@ import JSONUtilities
 
 public class Offer: OfferRights {
 
-    public enum Availability: String {
-        case available = "Available"
-        case comingSoon = "ComingSoon"
-
-        public static let cases: [Availability] = [
-          .available,
-          .comingSoon,
-        ]
-    }
-
     public var price: Float
 
     public var availability: Availability
@@ -73,4 +63,18 @@ public class Offer: OfferRights {
         }
         return dictionary
     }
+}
+
+extension Offer {
+
+    public enum Availability: String {
+        case available = "Available"
+        case comingSoon = "ComingSoon"
+
+        public static let cases: [Availability] = [
+          .available,
+          .comingSoon,
+        ]
+    }
+
 }

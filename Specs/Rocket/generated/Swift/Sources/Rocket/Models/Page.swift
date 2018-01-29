@@ -12,7 +12,7 @@ public class Page: PageSummary {
     public var entries: [PageEntry]
 
     /** A map of custom fields defined by a curator for a page. */
-    public var customFields: [String: Any]?
+    public var customFields: AnonymousType?
 
     /** When the page represents the detail of an item this property will contain the item detail.
 
@@ -36,7 +36,7 @@ on list detail pages. See `feature-flags.md` for further details.*
 
     public var metadata: PageMetadata?
 
-    public init(id: String, path: String, title: String, template: String, isStatic: Bool, isSystemPage: Bool, entries: [PageEntry], key: String? = nil, customFields: [String: Any]? = nil, item: ItemDetail? = nil, list: ItemList? = nil, metadata: PageMetadata? = nil) {
+    public init(id: String, path: String, title: String, template: String, isStatic: Bool, isSystemPage: Bool, entries: [PageEntry], key: String? = nil, customFields: AnonymousType? = nil, item: ItemDetail? = nil, list: ItemList? = nil, metadata: PageMetadata? = nil) {
         self.entries = entries
         self.customFields = customFields
         self.item = item

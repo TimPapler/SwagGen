@@ -9,55 +9,6 @@ import JSONUtilities
 /** The base type for both Offer and Entitlement. */
 public class OfferRights: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    /** The base type for both Offer and Entitlement. */
-    public enum DeliveryType: String {
-        case stream = "Stream"
-        case download = "Download"
-        case streamOrDownload = "StreamOrDownload"
-        case progressiveDownload = "ProgressiveDownload"
-        case none = "None"
-
-        public static let cases: [DeliveryType] = [
-          .stream,
-          .download,
-          .streamOrDownload,
-          .progressiveDownload,
-          .none,
-        ]
-    }
-
-    /** The base type for both Offer and Entitlement. */
-    public enum Resolution: String {
-        case sd = "SD"
-        case hd720 = "HD-720"
-        case hd1080 = "HD-1080"
-        case unknown = "Unknown"
-
-        public static let cases: [Resolution] = [
-          .sd,
-          .hd720,
-          .hd1080,
-          .unknown,
-        ]
-    }
-
-    /** The base type for both Offer and Entitlement. */
-    public enum Ownership: String {
-        case subscription = "Subscription"
-        case free = "Free"
-        case rent = "Rent"
-        case own = "Own"
-        case none = "None"
-
-        public static let cases: [Ownership] = [
-          .subscription,
-          .free,
-          .rent,
-          .own,
-          .none,
-        ]
-    }
-
     public var deliveryType: DeliveryType
 
     public var scopes: [String]
@@ -133,4 +84,57 @@ public class OfferRights: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension OfferRights {
+
+    /** The base type for both Offer and Entitlement. */
+    public enum DeliveryType: String {
+        case stream = "Stream"
+        case download = "Download"
+        case streamOrDownload = "StreamOrDownload"
+        case progressiveDownload = "ProgressiveDownload"
+        case none = "None"
+
+        public static let cases: [DeliveryType] = [
+          .stream,
+          .download,
+          .streamOrDownload,
+          .progressiveDownload,
+          .none,
+        ]
+    }
+
+    /** The base type for both Offer and Entitlement. */
+    public enum Resolution: String {
+        case sd = "SD"
+        case hd720 = "HD-720"
+        case hd1080 = "HD-1080"
+        case unknown = "Unknown"
+
+        public static let cases: [Resolution] = [
+          .sd,
+          .hd720,
+          .hd1080,
+          .unknown,
+        ]
+    }
+
+    /** The base type for both Offer and Entitlement. */
+    public enum Ownership: String {
+        case subscription = "Subscription"
+        case free = "Free"
+        case rent = "Rent"
+        case own = "Own"
+        case none = "None"
+
+        public static let cases: [Ownership] = [
+          .subscription,
+          .free,
+          .rent,
+          .own,
+          .none,
+        ]
+    }
+
 }

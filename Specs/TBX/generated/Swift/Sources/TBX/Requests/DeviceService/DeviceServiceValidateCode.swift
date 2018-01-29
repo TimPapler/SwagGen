@@ -48,12 +48,12 @@ extension TBX.DeviceService {
         }
 
         public enum Response: APIResponseValue, CustomStringConvertible, CustomDebugStringConvertible {
-            public typealias SuccessType = [String: Any]
+            public typealias SuccessType = AnonymousType
 
             /** Request was successful */
-            case status200([String: Any])
+            case status200(AnonymousType)
 
-            public var success: [String: Any]? {
+            public var success: AnonymousType? {
                 switch self {
                 case .status200(let response): return response
                 }

@@ -25,7 +25,7 @@ public class ItemList: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var path: String
 
     /** A map of custom fields defined by a curator for a list. */
-    public var customFields: [String: Any]?
+    public var customFields: AnonymousType?
 
     /** A full description of this list. */
     public var description: String?
@@ -48,7 +48,7 @@ For example the Movies Genre list will take a parameter `genre` with a given val
     /** The title of this list */
     public var title: String?
 
-    public init(id: String, size: Int, items: [ItemSummary], paging: Pagination, path: String, customFields: [String: Any]? = nil, description: String? = nil, images: [String: URL]? = nil, itemTypes: [ItemType]? = nil, parameter: String? = nil, shortDescription: String? = nil, tagline: String? = nil, title: String? = nil) {
+    public init(id: String, size: Int, items: [ItemSummary], paging: Pagination, path: String, customFields: AnonymousType? = nil, description: String? = nil, images: [String: URL]? = nil, itemTypes: [ItemType]? = nil, parameter: String? = nil, shortDescription: String? = nil, tagline: String? = nil, title: String? = nil) {
         self.id = id
         self.size = size
         self.items = items
