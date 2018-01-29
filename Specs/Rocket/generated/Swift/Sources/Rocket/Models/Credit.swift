@@ -9,6 +9,40 @@ import JSONUtilities
 public class Credit: Person {
 
     /** The type of role the credit performed, e.g. actor. */
+    public var role: Role
+
+    /** The name of the character. */
+    public var character: String?
+
+    public init(name: String, path: String, role: Role, character: String? = nil) {
+        self.role = role
+        self.character = character
+        super.init(name: name, path: path)
+    }
+
+    public required init(jsonDictionary: JSONDictionary) throws {
+        role = try jsonDictionary.json(atKeyPath: "role")
+        character = jsonDictionary.json(atKeyPath: "character")
+        try super.init(jsonDictionary: jsonDictionary)
+    }
+
+    public override func encode() -> JSONDictionary {
+        var dictionary: JSONDictionary = [:]
+        dictionary["role"] = role.encode()
+        if let character = character {
+            dictionary["character"] = character
+        }
+        let superDictionary = super.encode()
+        for (key, value) in superDictionary {
+            dictionary[key] = value
+        }
+        return dictionary
+    }
+}
+
+extension Credit {
+
+    /** The type of role the credit performed, e.g. actor. */
     public enum Role: String {
         case actor = "actor"
         case associateproducer = "associateproducer"
@@ -45,34 +79,4 @@ public class Credit: Person {
         ]
     }
 
-    /** The type of role the credit performed, e.g. actor. */
-    public var role: Role
-
-    /** The name of the character. */
-    public var character: String?
-
-    public init(name: String, path: String, role: Role, character: String? = nil) {
-        self.role = role
-        self.character = character
-        super.init(name: name, path: path)
-    }
-
-    public required init(jsonDictionary: JSONDictionary) throws {
-        role = try jsonDictionary.json(atKeyPath: "role")
-        character = jsonDictionary.json(atKeyPath: "character")
-        try super.init(jsonDictionary: jsonDictionary)
-    }
-
-    public override func encode() -> JSONDictionary {
-        var dictionary: JSONDictionary = [:]
-        dictionary["role"] = role.encode()
-        if let character = character {
-            dictionary["character"] = character
-        }
-        let superDictionary = super.encode()
-        for (key, value) in superDictionary {
-            dictionary[key] = value
-        }
-        return dictionary
-    }
 }

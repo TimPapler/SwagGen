@@ -8,26 +8,6 @@ import JSONUtilities
 
 public class EnumArrays: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    public enum ArrayEnum: String {
-        case fish = "fish"
-        case crab = "crab"
-
-        public static let cases: [ArrayEnum] = [
-          .fish,
-          .crab,
-        ]
-    }
-
-    public enum JustSymbol: String {
-        case greaterThanOrEqualTo = ">="
-        case dollar = "$"
-
-        public static let cases: [JustSymbol] = [
-          .greaterThanOrEqualTo,
-          .dollar,
-        ]
-    }
-
     public var arrayEnum: [ArrayEnum]?
 
     public var justSymbol: JustSymbol?
@@ -57,4 +37,28 @@ public class EnumArrays: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension EnumArrays {
+
+    public enum ArrayEnum: String {
+        case fish = "fish"
+        case crab = "crab"
+
+        public static let cases: [ArrayEnum] = [
+          .fish,
+          .crab,
+        ]
+    }
+
+    public enum JustSymbol: String {
+        case greaterThanOrEqualTo = ">="
+        case dollar = "$"
+
+        public static let cases: [JustSymbol] = [
+          .greaterThanOrEqualTo,
+          .dollar,
+        ]
+    }
+
 }

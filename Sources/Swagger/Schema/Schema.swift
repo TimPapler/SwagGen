@@ -14,6 +14,17 @@ public enum SchemaType {
     case any
 }
 
+extension SchemaType {
+    
+    public var isArray: Bool {
+        switch self {
+        case .array:
+            return true
+        default:
+            return false
+        }
+    }
+}
 extension Schema: JSONObjectConvertible {
 
     public init(jsonDictionary: JSONDictionary) throws {

@@ -43,10 +43,10 @@ extension TBX.UserService {
         }
 
         public enum Response: APIResponseValue, CustomStringConvertible, CustomDebugStringConvertible {
-            public typealias SuccessType = [String: Any]
+            public typealias SuccessType = AnonymousType
 
             /** Request was successful */
-            case status200([String: Any])
+            case status200(AnonymousType)
 
             /** Bad Request  */
             case status400(ResponseError)
@@ -60,7 +60,7 @@ extension TBX.UserService {
             /** Device was Logged Out or the customer not longer exists */
             case status410(ResponseError)
 
-            public var success: [String: Any]? {
+            public var success: AnonymousType? {
                 switch self {
                 case .status200(let response): return response
                 default: return nil
@@ -78,7 +78,7 @@ extension TBX.UserService {
             }
 
             /// either success or failure value. Success is anything in the 200..<300 status code range
-            public var responseResult: APIResponseResult<[String: Any], ResponseError> {
+            public var responseResult: APIResponseResult<AnonymousType, ResponseError> {
                 if let successValue = success {
                     return .success(successValue)
                 } else if let failureValue = failure {

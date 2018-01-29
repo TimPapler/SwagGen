@@ -9,38 +9,6 @@ import JSONUtilities
 /** Defines playback exclusion rules for an Offer or Entitlement. */
 public class ExclusionRule: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    /** Defines playback exclusion rules for an Offer or Entitlement. */
-    public enum ExcludeDelivery: String {
-        case stream = "Stream"
-        case download = "Download"
-        case streamOrDownload = "StreamOrDownload"
-        case progressiveDownload = "ProgressiveDownload"
-        case none = "None"
-
-        public static let cases: [ExcludeDelivery] = [
-          .stream,
-          .download,
-          .streamOrDownload,
-          .progressiveDownload,
-          .none,
-        ]
-    }
-
-    /** Defines playback exclusion rules for an Offer or Entitlement. */
-    public enum ExcludeMinResolution: String {
-        case sd = "SD"
-        case hd720 = "HD-720"
-        case hd1080 = "HD-1080"
-        case unknown = "Unknown"
-
-        public static let cases: [ExcludeMinResolution] = [
-          .sd,
-          .hd720,
-          .hd1080,
-          .unknown,
-        ]
-    }
-
     public var description: String?
 
     /** The device type that the exclusion rules apply to. */
@@ -101,4 +69,40 @@ public class ExclusionRule: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension ExclusionRule {
+
+    /** Defines playback exclusion rules for an Offer or Entitlement. */
+    public enum ExcludeDelivery: String {
+        case stream = "Stream"
+        case download = "Download"
+        case streamOrDownload = "StreamOrDownload"
+        case progressiveDownload = "ProgressiveDownload"
+        case none = "None"
+
+        public static let cases: [ExcludeDelivery] = [
+          .stream,
+          .download,
+          .streamOrDownload,
+          .progressiveDownload,
+          .none,
+        ]
+    }
+
+    /** Defines playback exclusion rules for an Offer or Entitlement. */
+    public enum ExcludeMinResolution: String {
+        case sd = "SD"
+        case hd720 = "HD-720"
+        case hd1080 = "HD-1080"
+        case unknown = "Unknown"
+
+        public static let cases: [ExcludeMinResolution] = [
+          .sd,
+          .hd720,
+          .hd1080,
+          .unknown,
+        ]
+    }
+
 }

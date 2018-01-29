@@ -32,9 +32,9 @@ public class IdentityProvider: JSONDecodable, JSONEncodable, PrettyPrintable {
 
     public var maintenance: Bool?
 
-    public var oauth2: [String: Any]?
+    public var oauth2: AnonymousType?
 
-    public var saml: [String: Any]?
+    public var saml: AnonymousType?
 
     public var sendRequestorAuthZ: Bool?
 
@@ -52,7 +52,7 @@ public class IdentityProvider: JSONDecodable, JSONEncodable, PrettyPrintable {
 
     public var wsURL: String?
 
-    public init(description: String, shortName: String, apiKey: String, clientType: String, devicesLimit: Double, active: Bool, canCreateToken: Bool, canCreateDevice: Bool, conector: String? = nil, haveMultipleURNService: Bool? = nil, id: ObjectID? = nil, maintenance: Bool? = nil, oauth2: [String: Any]? = nil, saml: [String: Any]? = nil, sendRequestorAuthZ: Bool? = nil, subscriberIdData: String? = nil, whitelistDomains: [String]? = nil, wsAPIKey: String? = nil, wsMaintenance: Bool? = nil, wsMaintenanceCountry: [String]? = nil, wsNameSpace: String? = nil, wsURL: String? = nil) {
+    public init(description: String, shortName: String, apiKey: String, clientType: String, devicesLimit: Double, active: Bool, canCreateToken: Bool, canCreateDevice: Bool, conector: String? = nil, haveMultipleURNService: Bool? = nil, id: ObjectID? = nil, maintenance: Bool? = nil, oauth2: AnonymousType? = nil, saml: AnonymousType? = nil, sendRequestorAuthZ: Bool? = nil, subscriberIdData: String? = nil, whitelistDomains: [String]? = nil, wsAPIKey: String? = nil, wsMaintenance: Bool? = nil, wsMaintenanceCountry: [String]? = nil, wsNameSpace: String? = nil, wsURL: String? = nil) {
         self.description = description
         self.shortName = shortName
         self.apiKey = apiKey

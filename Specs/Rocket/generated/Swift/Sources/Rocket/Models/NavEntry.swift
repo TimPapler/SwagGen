@@ -15,7 +15,7 @@ public class NavEntry: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var content: NavContent?
 
     /** A map of custom fields defined by a curator for a nav entry. */
-    public var customFields: [String: Any]?
+    public var customFields: AnonymousType?
 
     /** True if this is a featured menu item.
 
@@ -32,7 +32,7 @@ If the value begins with `http` then it's an external url.
  */
     public var path: String?
 
-    public init(children: [NavEntry]? = nil, content: NavContent? = nil, customFields: [String: Any]? = nil, featured: Bool? = nil, label: String? = nil, path: String? = nil) {
+    public init(children: [NavEntry]? = nil, content: NavContent? = nil, customFields: AnonymousType? = nil, featured: Bool? = nil, label: String? = nil, path: String? = nil) {
         self.children = children
         self.content = content
         self.customFields = customFields

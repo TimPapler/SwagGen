@@ -17,6 +17,15 @@ struct Enum {
     }
 }
 
+struct InlineObject {
+    let name: String
+    let description: String?
+    let metadata: Metadata
+    
+    let schema: Schema
+    
+}
+
 struct ResponseFormatter {
     let response: Response
     let successful: Bool
@@ -53,6 +62,10 @@ extension Metadata {
             return Enum(name: name, cases: enumValues.flatMap { $0 }, type: type, description: description ?? self.description, metadata: self)
         }
         return nil
+    }
+    
+    func getInlineObject(name: String, description: String?, schema: Schema) -> InlineObject {
+        return InlineObject(name: name, description: description ?? self.description, metadata: self, schema: schema)
     }
 }
 
@@ -112,7 +125,7 @@ extension Schema {
     private var parentOptionalProperties: [Property] {
         return (parent?.value.parentOptionalProperties ?? []) + optionalProperties
     }
-
+    
     func getEnum(name: String, description: String?) -> Enum? {
         switch type {
         case let .object(objectSchema):
@@ -131,6 +144,19 @@ extension Schema {
         }
         return nil
     }
+    
+    func getInnerObject(name: String, description: String?) -> InlineObject? {
+        switch type {
+        case .object(let object) where !object.properties.isEmpty:
+            return metadata.getInlineObject(name: name, description: description, schema: self)
+        case let .array(array):
+            if case let .single(schema) = array.items {
+                return schema.getInnerObject(name: name, description: description)
+            }
+        default: break
+        }
+        return nil
+    }
 
     var enums: [Enum] {
         var enums = properties.flatMap { $0.schema.getEnum(name: $0.name, description: $0.schema.metadata.description) }
@@ -138,6 +164,18 @@ extension Schema {
             enums += schema.enums
         }
         return enums
+    }
+    
+    var inlinedObjects: [InlineObject] {
+        return properties.flatMap { property in
+            switch property.schema.type {
+            case .object where nil == property.schema.getEnum(name: property.name, description: property.schema.metadata.description):
+                return property.schema.getInnerObject(name: property.name, description: property.schema.metadata.description)
+            default:
+                return nil
+            }
+        }
+        
     }
 }
 

@@ -8,16 +8,6 @@ import JSONUtilities
 
 public class StopPointSequence: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    public enum ServiceType: String {
-        case regular = "Regular"
-        case night = "Night"
-
-        public static let cases: [ServiceType] = [
-          .regular,
-          .night,
-        ]
-    }
-
     /** The id of this branch. */
     public var branchId: Int?
 
@@ -94,4 +84,18 @@ public class StopPointSequence: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension StopPointSequence {
+
+    public enum ServiceType: String {
+        case regular = "Regular"
+        case night = "Night"
+
+        public static let cases: [ServiceType] = [
+          .regular,
+          .night,
+        ]
+    }
+
 }

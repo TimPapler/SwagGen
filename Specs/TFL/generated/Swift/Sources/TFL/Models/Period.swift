@@ -8,20 +8,6 @@ import JSONUtilities
 
 public class Period: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    public enum `Type`: String {
-        case normal = "Normal"
-        case frequencyHours = "FrequencyHours"
-        case frequencyMinutes = "FrequencyMinutes"
-        case unknown = "Unknown"
-
-        public static let cases: [`Type`] = [
-          .normal,
-          .frequencyHours,
-          .frequencyMinutes,
-          .unknown,
-        ]
-    }
-
     public var frequency: ServiceFrequency?
 
     public var fromTime: TwentyFourHourClockTime?
@@ -65,4 +51,22 @@ public class Period: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension Period {
+
+    public enum `Type`: String {
+        case normal = "Normal"
+        case frequencyHours = "FrequencyHours"
+        case frequencyMinutes = "FrequencyMinutes"
+        case unknown = "Unknown"
+
+        public static let cases: [`Type`] = [
+          .normal,
+          .frequencyHours,
+          .frequencyMinutes,
+          .unknown,
+        ]
+    }
+
 }

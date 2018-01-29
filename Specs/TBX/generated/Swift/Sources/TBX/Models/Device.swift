@@ -16,7 +16,7 @@ public class Device: JSONDecodable, JSONEncodable, PrettyPrintable {
 
     public var customerId: ObjectID?
 
-    public var data: [String: Any]?
+    public var data: AnonymousType?
 
     public var deactivateDate: Date?
 
@@ -34,7 +34,7 @@ public class Device: JSONDecodable, JSONEncodable, PrettyPrintable {
 
     public var updated: Date?
 
-    public init(id: String, created: Date? = nil, customer: ObjectID? = nil, customerId: ObjectID? = nil, data: [String: Any]? = nil, deactivateDate: Date? = nil, description: String? = nil, deviceType: ObjectID? = nil, expirationDate: Date? = nil, identifier: String? = nil, lastLogin: Date? = nil, loggedOutDate: Date? = nil, updated: Date? = nil) {
+    public init(id: String, created: Date? = nil, customer: ObjectID? = nil, customerId: ObjectID? = nil, data: AnonymousType? = nil, deactivateDate: Date? = nil, description: String? = nil, deviceType: ObjectID? = nil, expirationDate: Date? = nil, identifier: String? = nil, lastLogin: Date? = nil, loggedOutDate: Date? = nil, updated: Date? = nil) {
         self.id = id
         self.created = created
         self.customer = customer

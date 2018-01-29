@@ -8,34 +8,6 @@ import JSONUtilities
 
 public class MediaFile: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    /** The way in which the media file is delivered. */
-    public enum DeliveryType: String {
-        case stream = "Stream"
-        case progressive = "Progressive"
-        case download = "Download"
-
-        public static let cases: [DeliveryType] = [
-          .stream,
-          .progressive,
-          .download,
-        ]
-    }
-
-    /** The resolution of the video media. */
-    public enum Resolution: String {
-        case sd = "SD"
-        case hd720 = "HD-720"
-        case hd1080 = "HD-1080"
-        case unknown = "Unknown"
-
-        public static let cases: [Resolution] = [
-          .sd,
-          .hd720,
-          .hd1080,
-          .unknown,
-        ]
-    }
-
     /** The name of the media file. */
     public var name: String
 
@@ -113,4 +85,36 @@ public class MediaFile: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension MediaFile {
+
+    /** The way in which the media file is delivered. */
+    public enum DeliveryType: String {
+        case stream = "Stream"
+        case progressive = "Progressive"
+        case download = "Download"
+
+        public static let cases: [DeliveryType] = [
+          .stream,
+          .progressive,
+          .download,
+        ]
+    }
+
+    /** The resolution of the video media. */
+    public enum Resolution: String {
+        case sd = "SD"
+        case hd720 = "HD-720"
+        case hd1080 = "HD-1080"
+        case unknown = "Unknown"
+
+        public static let cases: [Resolution] = [
+          .sd,
+          .hd720,
+          .hd1080,
+          .unknown,
+        ]
+    }
+
 }

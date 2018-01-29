@@ -13,13 +13,13 @@ public class DeviceObject: JSONDecodable, JSONEncodable, PrettyPrintable {
     /** When this device was created */
     public var createdAt: Date
 
-    public var type: [String: Any]
+    public var type: `Type`
 
-    public var customer: [String: Any]
+    public var customer: Customer
 
     public var description: String?
 
-    public init(token: String, createdAt: Date, type: [String: Any], customer: [String: Any], description: String? = nil) {
+    public init(token: String, createdAt: Date, type: `Type`, customer: Customer, description: String? = nil) {
         self.token = token
         self.createdAt = createdAt
         self.type = type
@@ -39,8 +39,8 @@ public class DeviceObject: JSONDecodable, JSONEncodable, PrettyPrintable {
         var dictionary: JSONDictionary = [:]
         dictionary["token"] = token
         dictionary["createdAt"] = createdAt.encode()
-        dictionary["type"] = type
-        dictionary["customer"] = customer
+        dictionary["type"] = type.encode()
+        dictionary["customer"] = customer.encode()
         if let description = description {
             dictionary["description"] = description
         }
@@ -51,4 +51,103 @@ public class DeviceObject: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension DeviceObject {
+
+    
+    public struct `Type`: Codable {
+        
+        public var code: String?
+        public var description: String?
+
+        public init(code: String? = nil, description: String? = nil) {
+            self.code = code
+            self.description = description
+        }
+    }
+
+    
+    public struct Customer: Codable {
+        public class DeviceObject: JSONDecodable, JSONEncodable, PrettyPrintable {
+
+            public var code: String?
+
+            public var description: String?
+
+            public init(code: String? = nil, description: String? = nil) {
+                self.code = code
+                self.description = description
+            }
+
+            public required init(jsonDictionary: JSONDictionary) throws {
+                code = jsonDictionary.json(atKeyPath: "code")
+                description = jsonDictionary.json(atKeyPath: "description")
+            }
+
+            public func encode() -> JSONDictionary {
+                var dictionary: JSONDictionary = [:]
+                if let code = code {
+                    dictionary["code"] = code
+                }
+                if let description = description {
+                    dictionary["description"] = description
+                }
+                return dictionary
+            }
+
+            /// pretty prints all properties including nested models
+            public var prettyPrinted: String {
+                return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
+            }
+        }
+        public class DeviceObject: JSONDecodable, JSONEncodable, PrettyPrintable {
+
+            public var code: String?
+
+            public var description: String?
+
+            public init(code: String? = nil, description: String? = nil) {
+                self.code = code
+                self.description = description
+            }
+
+            public required init(jsonDictionary: JSONDictionary) throws {
+                code = jsonDictionary.json(atKeyPath: "code")
+                description = jsonDictionary.json(atKeyPath: "description")
+            }
+
+            public func encode() -> JSONDictionary {
+                var dictionary: JSONDictionary = [:]
+                if let code = code {
+                    dictionary["code"] = code
+                }
+                if let description = description {
+                    dictionary["description"] = description
+                }
+                return dictionary
+            }
+
+            /// pretty prints all properties including nested models
+            public var prettyPrinted: String {
+                return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
+            }
+        }
+        
+        public var country: Country?
+        /** When the customer was created */
+        public var createdAt: Date?
+        public var id: String?
+        public var idp: Idp?
+        public var subscriberId: String?
+
+        public init(country: Country? = nil, createdAt: Date? = nil, id: String? = nil, idp: Idp? = nil, subscriberId: String? = nil) {
+            self.country = country
+            self.createdAt = createdAt
+            self.id = id
+            self.idp = idp
+            self.subscriberId = subscriberId
+        }
+    }
+
 }
