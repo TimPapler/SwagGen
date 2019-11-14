@@ -3,4 +3,4 @@
 import Foundation
 import JSONUtilities
 
-{% include "Includes/Model.stencil" using bodyParam %}
+{% include "Includes/Model.stencil" bodyParam %}

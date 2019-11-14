@@ -9,6 +9,8 @@ public struct Operation {
     public let description: String?
     public let pathParameters: [PossibleReference<Parameter>]
     public let operationParameters: [PossibleReference<Parameter>]
+    public let consumes: [String]?
+    public let produces: [String]?
 
     public var parameters: [PossibleReference<Parameter>] {
         return pathParameters.filter { pathParam in
@@ -48,7 +50,8 @@ extension Operation {
         operationParameters = (jsonDictionary.json(atKeyPath: "parameters")) ?? []
         summary = jsonDictionary.json(atKeyPath: "summary")
         description = jsonDictionary.json(atKeyPath: "description")
-
+        consumes = jsonDictionary.json(atKeyPath: "consumes")
+        produces = jsonDictionary.json(atKeyPath: "produces")
         identifier = jsonDictionary.json(atKeyPath: "operationId")
         tags = (jsonDictionary.json(atKeyPath: "tags")) ?? []
         security = jsonDictionary.json(atKeyPath: "security")

@@ -108,7 +108,7 @@ public class SwiftFormatter: CodeFormatter {
             case let .format(format):
                 switch format {
                 case .binary, .byte: return "String" // TODO: Data
-                case .dateTime, .date: return "Date"
+                case .dateTime, .date, .iso8601: return "Date"
                 case .email, .hostname, .ipv4, .ipv6, .password: return "String"
                 case .uri: return "URL"
                 }
@@ -137,7 +137,7 @@ public class SwiftFormatter: CodeFormatter {
             }
         case .boolean:
             return "Bool"
-        case .file: return "URL"
+        case .file: return "File"
         }
     }
 
@@ -163,17 +163,17 @@ public class SwiftFormatter: CodeFormatter {
                 let typeString = getSchemaType(name: name, schema: types.first!, checkEnum: checkEnum)
                 return checkEnum ? "[\(enumValue ?? typeString)]" : typeString
             }
-        case let .object(schema):
-            //            if schema.properties.isEmpty {
-            switch schema.additionalProperties {
-            case .bool: return "[String: Any]"
-            case let .schema(schema):
-                let typeString = getSchemaType(name: name, schema: schema, checkEnum: checkEnum)
-                return checkEnum ? "[String: \(enumValue ?? typeString)]" : typeString
+        case let .object(s):
+            if s.properties.isEmpty {
+                switch s.additionalProperties {
+                case .bool: return "AnonymousType"
+                case let .schema(s):
+                    let typeString = getSchemaType(name: name, schema: s, checkEnum: checkEnum)
+                    return checkEnum ? "[String: \(enumValue ?? typeString)]" : typeString
+                }
+            } else {
+                return getModelType(name)
             }
-        //            } else {
-        //                return getModelType(name)
-        //            }
         case let .reference(reference): return escapeType(reference.name.upperCamelCased())
         case .allOf: return "UNKNOWN_ALL_OFF"
         case .any: return "UNKNOWN_ANY"
@@ -203,8 +203,13 @@ public class SwiftFormatter: CodeFormatter {
 
         let type = context["type"] as! String
         let name = context["name"] as! String
-
+        
+        context["optionalName"] = name + (parameter.required ? "" : "?")
         context["optionalType"] = type + (parameter.required ? "" : "?")
+        if let parameterizedType = context["parameterizedType"] as? String {
+            context["optionalParameterizedType"] = parameterizedType + (parameter.required ? "" : "?")
+        }
+        
         var encodedValue = getEncodedValue(name: getName(name), type: type)
 
         if case let .other(items) = parameter.type,
@@ -217,6 +222,7 @@ public class SwiftFormatter: CodeFormatter {
         if !parameter.required, let range = encodedValue.range(of: ".") {
             encodedValue = encodedValue.replacingOccurrences(of: ".", with: "?.", options: [], range: range)
         }
+        
         context["encodedValue"] = encodedValue
         return context
     }
@@ -224,7 +230,7 @@ public class SwiftFormatter: CodeFormatter {
     func getEncodedValue(name: String, type: String) -> String {
         var encodedValue = name
 
-        let jsonTypes = ["Any", "[String: Any]", "Int", "String", "Float", "Double", "Bool"]
+        let jsonTypes = ["Any", "AnonymousType", "Int", "String", "Float", "Double", "Bool"]
 
         if !jsonTypes.contains(type) && !jsonTypes.map({ "[\($0)]" }).contains(type) && !jsonTypes.map({ "[String: \($0)]" }).contains(type) {
             if type.hasPrefix("[[") {
@@ -232,7 +238,7 @@ public class SwiftFormatter: CodeFormatter {
             } else if type.hasPrefix("[String: [") {
                 encodedValue += ".mapValues({ $0.encode() })"
             } else {
-                encodedValue += ".encode()"
+                encodedValue += ".urlEncoded()"
             }
         }
 
@@ -244,14 +250,19 @@ public class SwiftFormatter: CodeFormatter {
 
         let type = context["type"] as! String
         let name = context["name"] as! String
+        context["parameterizedType"] = property.schema.parameterizedType
+        let parameterizedType = property.schema.parameterizedType
 
+        context["optionalName"] = name + (property.required ? "" : "?")
         context["optionalType"] = type + (property.required ? "" : "?")
+        if let parameterizedType = parameterizedType {
+            context["optionalParameterizedType"] = parameterizedType + (property.required ? "" : "?")
+        }
         var encodedValue = getEncodedValue(name: getName(name), type: type)
 
         if !property.required, let range = encodedValue.range(of: ".") {
             encodedValue = encodedValue.replacingOccurrences(of: ".", with: "?.", options: [], range: range)
         }
-
         context["encodedValue"] = encodedValue
 
         return context

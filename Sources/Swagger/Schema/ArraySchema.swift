@@ -11,6 +11,7 @@ public struct ArraySchema {
         case single(Schema)
         case multiple([Schema])
     }
+    
 }
 
 extension ArraySchema: JSONObjectConvertible {
@@ -29,5 +30,15 @@ extension ArraySchema: JSONObjectConvertible {
         maxItems = jsonDictionary.json(atKeyPath: "maxItems")
         additionalItems = AdditionalProperties(jsonDictionary: jsonDictionary, key: "additionalItems")
         uniqueItems = jsonDictionary.json(atKeyPath: "uniqueItems") ?? false
+    }
+}
+
+extension ArraySchema {
+    
+    var parameterizedType: String? {
+        if case let .single(schema) = items {
+            return schema.metadata.parameterizedType
+        }
+        return nil
     }
 }

@@ -32,7 +32,11 @@ public class CodeFormatter {
 
         context["raw"] = spec.json
         enums = spec.enums
-        context["enums"] = enums.map(getEnumContext)
+        let x = enums.map(getEnumContext)
+        context["enums"] = x
+        context["nonGlobalEnums"] = x.filter { let isGlobal = $0["isGlobal"] as? Bool ?? false
+            return !isGlobal
+        }
         context["paths"] = spec.paths.map(getPathContext)
         context["operations"] = spec.operations.map(getOperationContext)
         context["tags"] = spec.tags
@@ -42,10 +46,10 @@ public class CodeFormatter {
         context["host"] = spec.host
         context["basePath"] = spec.basePath
         context["securityDefinitions"] = spec.securityDefinitions.map(getSecurityDefinitionContext)
-
         let scheme = (spec.schemes?.first?.rawValue).flatMap { "\($0)://" }
         context["baseURL"] = "\(scheme ?? "")\(spec.host?.absoluteString ?? "")\(spec.basePath ?? "")"
-
+        context["produces"] = spec.produces
+        context["consumes"] = spec.consumes
         return context
     }
 
@@ -103,14 +107,22 @@ public class CodeFormatter {
         if let parent = schema.parent {
             context["parent"] = getDefinitionContext(parent)
         }
-
+        
+        
         context["description"] = schema.metadata.description
         context["requiredProperties"] = schema.requiredProperties.map(getPropertyContext)
         context["optionalProperties"] = schema.optionalProperties.map(getPropertyContext)
         context["properties"] = schema.properties.map(getPropertyContext)
         context["allProperties"] = schema.parentProperties.map(getPropertyContext)
-        context["enums"] = schema.enums.map(getEnumContext)
-
+        let x = schema.enums.map(getEnumContext)
+        context["enums"] = x
+        context["nonGlobalEnums"] = x.filter { let isGlobal = $0["isGlobal"] as? Bool ?? false
+            return !isGlobal
+        }
+        
+        context["inlinedObjects"] = schema.inlinedObjects.map({ (schema) -> Context in
+            self.getInlineSchemaContext(schema)
+        })
         return context
     }
 
@@ -138,6 +150,8 @@ public class CodeFormatter {
             context["operationId"] = generatedOperationId
             context["filename"] = getFilename(generatedOperationId)
         }
+        context["consumes"] = operation.consumes ?? spec.consumes
+        context["produces"] = operation.produces ?? spec.produces
 
         context["raw"] = operation.json
         context["method"] = operation.method.rawValue.uppercased()
@@ -150,14 +164,17 @@ public class CodeFormatter {
 
         context["params"] = params.map(getParameterContext)
         context["hasBody"] = params.contains { $0.location == .body || $0.location == .formData }
-        context["nonBodyParams"] = params.filter { $0.location != .body }.map(getParameterContext)
+        context["nonBodyParams"] = params.filter { $0.location != .body && $0.location != .formData }.map(getParameterContext)
+        
         context["encodedParams"] = params.filter { $0.location == .formData || $0.location == .query }.map(getParameterContext)
         if let bodyParam = operation.bodyParam {
             context["bodyParam"] = getParameterContext(bodyParam.value)
         }
         context["pathParams"] = operation.getParameters(type: .path).map(getParameterContext)
         context["queryParams"] = operation.getParameters(type: .query).map(getParameterContext)
+        context["hasFormParams"] = !operation.getParameters(type: .formData).isEmpty
         context["formParams"] = operation.getParameters(type: .formData).map(getParameterContext)
+        context["hasHeaderParams"] = !operation.getParameters(type: .header).map(getParameterContext).isEmpty
         context["headerParams"] = operation.getParameters(type: .header).map(getParameterContext)
         context["hasFileParam"] = params.contains { $0.metadata.type == .file }
         context["securityRequirement"] = operation.security?.first.flatMap(getSecurityRequirementContext)
@@ -177,8 +194,8 @@ public class CodeFormatter {
         context["onlySuccessReponses"] = successResponses.count == responses.count
         context["alwaysHasResponseType"] = responses.filter { $0.response.value.schema != nil }.count == responses.count
 
-        let successTypes = successResponses.flatMap { $0["type"] as? String }
-        let failureTypes = failureResponses.flatMap { $0["type"] as? String }
+        let successTypes = successResponses.compactMap { $0["type"] as? String }
+        let failureTypes = failureResponses.compactMap { $0["type"] as? String }
 
         if Set(successTypes).count == 1 {
             context["singleSuccessType"] = successTypes.first
@@ -186,8 +203,12 @@ public class CodeFormatter {
         if Set(failureTypes).count == 1 {
             context["singleFailureType"] = failureTypes.first
         }
-
-        context["enums"] = operation.enums.map(getEnumContext)
+        
+        let x = operation.enums.map(getEnumContext)
+        context["enums"] = x
+        context["nonGlobalEnums"] = x.filter { let isGlobal = $0["isGlobal"] as? Bool ?? false
+            return !isGlobal
+        }
         context["requestEnums"] = operation.requestEnums.map(getEnumContext)
         context["responseEnums"] = operation.responseEnums.map(getEnumContext)
 
@@ -195,18 +216,32 @@ public class CodeFormatter {
     }
 
     func getResponseContext(_ response: OperationResponse) -> Context {
-        var context: Context = [:]
+        var context: Context = response.response.value.schema.flatMap(getSchemaContext) ?? [:]
 
         context["success"] = response.successful
         context["name"] = response.name.lowerCamelCased()
         context["statusCode"] = response.statusCode
         context["success"] = response.successful
         context["schema"] = response.response.value.schema.flatMap(getSchemaContext)
+        if case .value(let r) = response.response, case .object? = r.schema?.type {
+            context["isLocal"] = true
+        }
+        
         context["description"] = response.response.value.description.description
+        //context["type"] = getModelType(response.name)
         context["type"] = response.response.value.schema.flatMap { getSchemaType(name: response.name, schema: $0) }
-
+        context["isArray"] = response.response.value.schema.flatMap({ $0.type.isArray })
+        context["arrayElementType"] = context["type"]?.flatMap({ (type) -> String? in
+            guard let type = type as? String else {
+                return nil
+            }
+            return type.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
+        })
+        
         return context
     }
+    
+    
 
     func getSecurityRequirementContext(_ securityRequirement: SecurityRequirement) -> Context {
         var context: Context = [:]
@@ -229,6 +264,7 @@ public class CodeFormatter {
         context["optional"] = !parameter.required
         context["parameterType"] = parameter.location.rawValue
         context["isFile"] = parameter.metadata.type == .file
+        context["isNotFile"] = parameter.metadata.type != .file
         context["description"] = parameter.description
 
         switch parameter.type {
@@ -256,7 +292,11 @@ public class CodeFormatter {
 
         return context
     }
-
+    func getInlineSchemaContext(_ object: InlineObject) -> Context {
+        var context: Context = getSchemaContext(object.schema)
+        context["inlineName"] = getOnnerObjectTypeType(object.name)
+        return context
+    }
     func getEnumContext(_ enumValue: Enum) -> Context {
         var context: Context = [:]
 
@@ -329,6 +369,10 @@ public class CodeFormatter {
     }
 
     func getEnumTypeType(_ name: String) -> String {
+        return escapeType(name.upperCamelCased())
+    }
+    
+    func getOnnerObjectTypeType(_ name: String) -> String {
         return escapeType(name.upperCamelCased())
     }
 

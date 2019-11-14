@@ -8,43 +8,6 @@ import JSONUtilities
 
 public class Plan: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    /** The type of plan. */
-    public enum `Type`: String {
-        case free = "Free"
-        case subscription = "Subscription"
-
-        public static let cases: [`Type`] = [
-          .free,
-          .subscription,
-        ]
-    }
-
-    /** The revenue type a plan targets. */
-    public enum RevenueType: String {
-        case tvod = "TVOD"
-        case svod = "SVOD"
-
-        public static let cases: [RevenueType] = [
-          .tvod,
-          .svod,
-        ]
-    }
-
-    /** The type of billing period used. */
-    public enum BillingPeriodType: String {
-        case week = "week"
-        case month = "month"
-        case year = "year"
-        case none = "none"
-
-        public static let cases: [BillingPeriodType] = [
-          .week,
-          .month,
-          .year,
-          .none,
-        ]
-    }
-
     /** The identifier of a plan. */
     public var id: String
 
@@ -97,12 +60,12 @@ public class Plan: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var currency: String
 
     /** A map of custom fields defined by a curator for a plan. */
-    public var customFields: [String: Any]?
+    public var customFields: AnonymousType?
 
     /** The price of a plan. If a free plan then undefined. */
     public var price: Float?
 
-    public init(id: String, title: String, tagline: String, type: `Type`, isFeatured: Bool, isActive: Bool, isPrivate: Bool, revenueType: RevenueType, subscriptionCode: String, alias: String, benefits: [String], billingPeriodType: BillingPeriodType, billingPeriodFrequency: Int, hasTrialPeriod: Bool, trialPeriodDays: Int, termsAndConditions: String, currency: String, customFields: [String: Any]? = nil, price: Float? = nil) {
+    public init(id: String, title: String, tagline: String, type: `Type`, isFeatured: Bool, isActive: Bool, isPrivate: Bool, revenueType: RevenueType, subscriptionCode: String, alias: String, benefits: [String], billingPeriodType: BillingPeriodType, billingPeriodFrequency: Int, hasTrialPeriod: Bool, trialPeriodDays: Int, termsAndConditions: String, currency: String, customFields: AnonymousType? = nil, price: Float? = nil) {
         self.id = id
         self.title = title
         self.tagline = tagline
@@ -178,4 +141,45 @@ public class Plan: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension Plan {
+
+    /** The type of plan. */
+    public enum `Type`: String {
+        case free = "Free"
+        case subscription = "Subscription"
+
+        public static let cases: [`Type`] = [
+          .free,
+          .subscription,
+        ]
+    }
+
+    /** The revenue type a plan targets. */
+    public enum RevenueType: String {
+        case tvod = "TVOD"
+        case svod = "SVOD"
+
+        public static let cases: [RevenueType] = [
+          .tvod,
+          .svod,
+        ]
+    }
+
+    /** The type of billing period used. */
+    public enum BillingPeriodType: String {
+        case week = "week"
+        case month = "month"
+        case year = "year"
+        case none = "none"
+
+        public static let cases: [BillingPeriodType] = [
+          .week,
+          .month,
+          .year,
+          .none,
+        ]
+    }
+
 }

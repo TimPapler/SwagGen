@@ -14,6 +14,17 @@ public enum SchemaType {
     case any
 }
 
+extension SchemaType {
+    
+    public var isArray: Bool {
+        switch self {
+        case .array:
+            return true
+        default:
+            return false
+        }
+    }
+}
 extension Schema: JSONObjectConvertible {
 
     public init(jsonDictionary: JSONDictionary) throws {
@@ -42,6 +53,22 @@ extension SchemaType: JSONObjectConvertible {
             self = .allOf(try AllOfSchema(jsonDictionary: jsonDictionary))
         } else {
             self = .any
+        }
+    }
+}
+
+extension Schema {
+    
+    public var parameterizedType: String? {
+        switch type {
+        case .array(let arraySchema):
+            
+            if let parameterizedType = arraySchema.parameterizedType {
+                return "[" + parameterizedType + "]"
+            }
+            fallthrough
+        default:
+            return metadata.parameterizedType
         }
     }
 }

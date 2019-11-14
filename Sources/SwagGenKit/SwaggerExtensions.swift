@@ -17,6 +17,15 @@ struct Enum {
     }
 }
 
+struct InlineObject {
+    let name: String
+    let description: String?
+    let metadata: Metadata
+    
+    let schema: Schema
+    
+}
+
 struct ResponseFormatter {
     let response: Response
     let successful: Bool
@@ -42,7 +51,7 @@ extension SwaggerSpec {
     }
 
     var enums: [Enum] {
-        return parameters.flatMap { $0.value.getEnum(name: $0.name, description: $0.value.description) }
+        return parameters.compactMap { $0.value.getEnum(name: $0.name, description: $0.value.description) }
     }
 }
 
@@ -50,9 +59,13 @@ extension Metadata {
 
     func getEnum(name: String, type: Enum.EnumType, description: String?) -> Enum? {
         if let enumValues = enumeratedValues {
-            return Enum(name: name, cases: enumValues.flatMap { $0 }, type: type, description: description ?? self.description, metadata: self)
+            return Enum(name: name, cases: enumValues.compactMap { $0 }, type: type, description: description ?? self.description, metadata: self)
         }
         return nil
+    }
+    
+    func getInlineObject(name: String, description: String?, schema: Schema) -> InlineObject {
+        return InlineObject(name: name, description: description ?? self.description, metadata: self, schema: schema)
     }
 }
 
@@ -112,7 +125,7 @@ extension Schema {
     private var parentOptionalProperties: [Property] {
         return (parent?.value.parentOptionalProperties ?? []) + optionalProperties
     }
-
+    
     func getEnum(name: String, description: String?) -> Enum? {
         switch type {
         case let .object(objectSchema):
@@ -131,13 +144,48 @@ extension Schema {
         }
         return nil
     }
+    
+    func getInnerObject(name: String, description: String?) -> InlineObject? {
+        switch type {
+        case .object(let object) where !object.properties.isEmpty:
+            return metadata.getInlineObject(name: name, description: description, schema: self)
+        case let .array(array):
+            if case let .single(schema) = array.items {
+                return schema.getInnerObject(name: name, description: description)
+            }
+        default: break
+        }
+        return nil
+    }
 
     var enums: [Enum] {
-        var enums = properties.flatMap { $0.schema.getEnum(name: $0.name, description: $0.schema.metadata.description) }
+        var enums = properties.compactMap { property in
+            property.schema.getEnum(name: property.name, description: property.schema.metadata.description)
+        }
+        
         if case let .object(objectSchema) = type, case let .schema(schema) = objectSchema.additionalProperties {
+            enums += schema.enums
+        } else if case let .array(arrayScehma) = type, case let .single(schema) = arrayScehma.items {
             enums += schema.enums
         }
         return enums
+    }
+    
+    var inlinedObjects: [InlineObject] {
+        return properties.compactMap { property in
+            switch property.schema.type {
+            case .object where nil == property.schema.getEnum(name: property.name, description: property.schema.metadata.description):
+                return property.schema.getInnerObject(name: property.name, description: property.schema.metadata.description)
+            case .array(let arraySchema):
+                if case let .single(schema) = arraySchema.items {
+                    return schema.getInnerObject(name: property.name, description: schema.metadata.description)
+                }
+                return nil
+            default:
+                return nil
+            }
+        }
+        
     }
 }
 
@@ -152,11 +200,11 @@ extension Swagger.Operation {
     }
 
     var requestEnums: [Enum] {
-        return parameters.flatMap { $0.value.enumValue }
+        return parameters.compactMap { $0.value.enumValue }
     }
 
     var responseEnums: [Enum] {
-        return responses.flatMap { $0.enumValue }
+        return responses.compactMap { $0.enumValue }
     }
 }
 

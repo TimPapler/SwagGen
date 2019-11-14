@@ -8,16 +8,6 @@ import JSONUtilities
 
 public class MapTest: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    public enum MapOfEnumString: String {
-        case upper = "UPPER"
-        case lower = "lower"
-
-        public static let cases: [MapOfEnumString] = [
-          .upper,
-          .lower,
-        ]
-    }
-
     public var mapMapOfString: [String: [String: String]]?
 
     public var mapOfEnumString: [String: MapOfEnumString]?
@@ -47,4 +37,18 @@ public class MapTest: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension MapTest {
+
+    public enum MapOfEnumString: String {
+        case upper = "UPPER"
+        case lower = "lower"
+
+        public static let cases: [MapOfEnumString] = [
+          .upper,
+          .lower,
+        ]
+    }
+
 }

@@ -31,6 +31,7 @@ public enum StringFormat: RawRepresentable {
         case binary
         case date
         case dateTime = "date-time"
+        case iso8601 = "iso8601"
         case email
         case hostname
         case ipv4

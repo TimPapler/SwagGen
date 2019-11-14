@@ -15,15 +15,15 @@ extension TestSpec.TestTag {
 
         public final class Request: APIRequest<Response> {
 
-            public var item: [String: Any]
+            public var item: Item
 
-            public init(item: [String: Any]) {
+            public init(item: Item) {
                 self.item = item
                 super.init(service: PostInlinebody.service)
             }
 
             public override var jsonBody: Any? {
-                return item
+                return item.encode()
             }
         }
 

@@ -8,24 +8,6 @@ import JSONUtilities
 
 public class RoadProject: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    public enum Phase: String {
-        case unscoped = "Unscoped"
-        case concept = "Concept"
-        case consultationEnded = "ConsultationEnded"
-        case consultation = "Consultation"
-        case construction = "Construction"
-        case complete = "Complete"
-
-        public static let cases: [Phase] = [
-          .unscoped,
-          .concept,
-          .consultationEnded,
-          .consultation,
-          .construction,
-          .complete,
-        ]
-    }
-
     public var boroughsBenefited: [String]?
 
     public var constructionEndDate: Date?
@@ -160,4 +142,26 @@ public class RoadProject: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension RoadProject {
+
+    public enum Phase: String {
+        case unscoped = "Unscoped"
+        case concept = "Concept"
+        case consultationEnded = "ConsultationEnded"
+        case consultation = "Consultation"
+        case construction = "Construction"
+        case complete = "Complete"
+
+        public static let cases: [Phase] = [
+          .unscoped,
+          .concept,
+          .consultationEnded,
+          .consultation,
+          .construction,
+          .complete,
+        ]
+    }
+
 }

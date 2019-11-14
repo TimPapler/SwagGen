@@ -8,19 +8,6 @@ import JSONUtilities
 
 public class Pet: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    /** pet status in the store */
-    public enum Status: String {
-        case available = "available"
-        case pending = "pending"
-        case sold = "sold"
-
-        public static let cases: [Status] = [
-          .available,
-          .pending,
-          .sold,
-        ]
-    }
-
     public var name: String
 
     public var photoUrls: [String]
@@ -75,4 +62,21 @@ public class Pet: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension Pet {
+
+    /** pet status in the store */
+    public enum Status: String {
+        case available = "available"
+        case pending = "pending"
+        case sold = "sold"
+
+        public static let cases: [Status] = [
+          .available,
+          .pending,
+          .sold,
+        ]
+    }
+
 }

@@ -8,19 +8,6 @@ import JSONUtilities
 
 public class ProfileTokenRequest: JSONDecodable, JSONEncodable, PrettyPrintable {
 
-    /** The scope(s) of the token(s) required. */
-    public enum Scopes: String {
-        case catalog = "Catalog"
-        case commerce = "Commerce"
-        case settings = "Settings"
-
-        public static let cases: [Scopes] = [
-          .catalog,
-          .commerce,
-          .settings,
-        ]
-    }
-
     /** The id of the profile the token should grant access rights to. */
     public var profileId: String
 
@@ -56,4 +43,21 @@ public class ProfileTokenRequest: JSONDecodable, JSONEncodable, PrettyPrintable 
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension ProfileTokenRequest {
+
+    /** The scope(s) of the token(s) required. */
+    public enum Scopes: String {
+        case catalog = "Catalog"
+        case commerce = "Commerce"
+        case settings = "Settings"
+
+        public static let cases: [Scopes] = [
+          .catalog,
+          .commerce,
+          .settings,
+        ]
+    }
+
 }

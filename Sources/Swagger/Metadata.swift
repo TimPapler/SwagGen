@@ -9,6 +9,12 @@ public struct Metadata {
     public let nullable: Bool
     public let example: Any?
     public var json: JSONDictionary
+    public let identifies: String?
+    public let references: String?
+    
+    public var parameterizedType: String? {
+        return identifies.map { "Identifier<\($0)>"} ?? references.map { "Reference<\($0)>"}
+    }
 }
 
 extension Metadata: JSONObjectConvertible {
@@ -21,6 +27,8 @@ extension Metadata: JSONObjectConvertible {
         enumeratedValues = jsonDictionary["enum"] as? [Any]
         nullable = (jsonDictionary.json(atKeyPath: "x-nullable")) ?? false
         example = jsonDictionary.json(atKeyPath: "example")
+        identifies = jsonDictionary.json(atKeyPath: "x-Identifies")
+        references = jsonDictionary.json(atKeyPath: "x-References")
         json = jsonDictionary
     }
 }

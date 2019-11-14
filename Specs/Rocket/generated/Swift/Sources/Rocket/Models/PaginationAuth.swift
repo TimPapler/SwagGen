@@ -9,30 +9,6 @@ import JSONUtilities
 public class PaginationAuth: JSONDecodable, JSONEncodable, PrettyPrintable {
 
     /** The token type required to load the list. */
-    public enum `Type`: String {
-        case userAccount = "UserAccount"
-        case userProfile = "UserProfile"
-
-        public static let cases: [`Type`] = [
-          .userAccount,
-          .userProfile,
-        ]
-    }
-
-    /** The token scope required. */
-    public enum Scope: String {
-        case catalog = "Catalog"
-        case commerce = "Commerce"
-        case settings = "Settings"
-
-        public static let cases: [Scope] = [
-          .catalog,
-          .commerce,
-          .settings,
-        ]
-    }
-
-    /** The token type required to load the list. */
     public var type: `Type`
 
     /** The token scope required. */
@@ -59,4 +35,32 @@ public class PaginationAuth: JSONDecodable, JSONEncodable, PrettyPrintable {
     public var prettyPrinted: String {
         return "\(Swift.type(of: self)):\n\(encode().recursivePrint(indentIndex: 1))"
     }
+}
+
+extension PaginationAuth {
+
+    /** The token type required to load the list. */
+    public enum `Type`: String {
+        case userAccount = "UserAccount"
+        case userProfile = "UserProfile"
+
+        public static let cases: [`Type`] = [
+          .userAccount,
+          .userProfile,
+        ]
+    }
+
+    /** The token scope required. */
+    public enum Scope: String {
+        case catalog = "Catalog"
+        case commerce = "Commerce"
+        case settings = "Settings"
+
+        public static let cases: [Scope] = [
+          .catalog,
+          .commerce,
+          .settings,
+        ]
+    }
+
 }
