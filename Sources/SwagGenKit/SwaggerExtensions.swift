@@ -51,7 +51,7 @@ extension SwaggerSpec {
     }
 
     var enums: [Enum] {
-        return parameters.compactMap { $0.value.getEnum(name: $0.name, description: $0.value.description) }
+        return parameters.flatMap { $0.value.getEnums(name: $0.name, description: $0.value.description) ?? [] }
     }
 }
 
@@ -200,11 +200,15 @@ extension Swagger.Operation {
     }
 
     var requestEnums: [Enum] {
-        return parameters.compactMap { $0.value.enumValue }
+        return parameters.flatMap { $0.value.enumValues ?? [] }
     }
 
     var responseEnums: [Enum] {
         return responses.compactMap { $0.enumValue }
+    }
+
+    var inlinedObjects: [InlineObject] {
+        return self.bodyParam?.value.inlinedObjects ?? []
     }
 }
 
@@ -262,19 +266,35 @@ extension Property {
 
 extension Parameter {
 
-    func getEnum(name: String, description: String?) -> Enum? {
+    var inlinedObjects: [InlineObject] {
+        switch self.type {
+        case .body(let schema):
+            return [schema.getInnerObject(name: name, description: description)].compactMap({ $0 })
+        case .other:
+            return []
+        }
+    }
+
+    func getEnums(name: String, description: String?) -> [Enum]? {
         switch type {
-        case let .body(schema): return schema.getEnum(name: name, description: description)
-        case let .other(item): return item.getEnum(name: name, description: description)
+        case let .body(schema): return schema.enums
+        case let .other(item): return item.getEnum(name: name, description: description).map({[$0]})
         }
     }
 
     var isEnum: Bool {
-        return enumValue != nil
+        return enumValues != nil
     }
 
-    var enumValue: Enum? {
-        return getEnum(name: name, description: description)
+    var enumValues: [Enum]? {
+        return getEnums(name: name, description: description)
+    }
+
+    var isArray: Bool {
+        switch type {
+        case .body(let schema): return schema.type.isArray
+        case .other(let item): return item.metadata.type == .array
+        }
     }
 }
 

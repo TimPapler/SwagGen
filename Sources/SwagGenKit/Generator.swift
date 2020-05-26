@@ -21,6 +21,12 @@ public class Generator {
         let filterExtension = Extension()
         filterExtension.registerFilter("lowerCamelCase") { ($0 as? String)?.lowerCamelCased() ?? $0 }
         filterExtension.registerFilter("upperCamelCase") { ($0 as? String)?.upperCamelCased() ?? $0 }
+        filterExtension.registerFilter("deoptionalize") { (value: Any?) in
+            if let value = value as? String, value.last == "?" {
+                return value.dropLast(1)
+            }
+            return value
+        }
 
         environment = Environment(loader: FileSystemLoader(paths: [templateConfig.basePath]), extensions: [filterExtension])
     }

@@ -34,11 +34,5 @@ let package = Package(
           "Yams",
           "PathKit",
         ]),
-        .testTarget(name: "SwagGenKitTests", dependencies: [
-          "SwagGenKit",
-        ]),
-        .testTarget(name: "SwaggerTests", dependencies: [
-          "Swagger",
-        ]),
     ]
 )

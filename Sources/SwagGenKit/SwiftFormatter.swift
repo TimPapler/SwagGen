@@ -222,8 +222,10 @@ public class SwiftFormatter: CodeFormatter {
         if !parameter.required, let range = encodedValue.range(of: ".") {
             encodedValue = encodedValue.replacingOccurrences(of: ".", with: "?.", options: [], range: range)
         }
-        
+
         context["encodedValue"] = encodedValue
+        context["isArray"] = parameter.isArray
+        context["isEnum"] = parameter.isEnum
         return context
     }
 

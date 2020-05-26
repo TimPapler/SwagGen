@@ -156,6 +156,21 @@ public class CodeFormatter {
         context["raw"] = operation.json
         context["method"] = operation.method.rawValue.uppercased()
         context["path"] = operation.path
+        let pathParams = operation.getParameters(type: .path).map(getParameterContext)
+        let queryParams = operation.getParameters(type: .query).map(getParameterContext)
+
+        let path: String
+        if operation.path.first == "/" {
+            path = String(operation.path.dropFirst())
+        } else {
+            path = operation.path
+        }
+        context["relativePathWithParamProperties"] =
+            pathParams.reduce(path, { (res, param) -> String in
+            let name = param["name"] as! String
+            return res.replacingOccurrences(of: "{"+name+"}", with: "\\(self." + (param["encodedValue"] as! String) + ")")
+        })
+
         context["description"] = operation.description
         context["tag"] = operation.tags.first
         context["tags"] = operation.tags
@@ -170,8 +185,8 @@ public class CodeFormatter {
         if let bodyParam = operation.bodyParam {
             context["bodyParam"] = getParameterContext(bodyParam.value)
         }
-        context["pathParams"] = operation.getParameters(type: .path).map(getParameterContext)
-        context["queryParams"] = operation.getParameters(type: .query).map(getParameterContext)
+        context["pathParams"] = pathParams
+        context["queryParams"] = queryParams
         context["hasFormParams"] = !operation.getParameters(type: .formData).isEmpty
         context["formParams"] = operation.getParameters(type: .formData).map(getParameterContext)
         context["hasHeaderParams"] = !operation.getParameters(type: .header).map(getParameterContext).isEmpty
@@ -203,7 +218,10 @@ public class CodeFormatter {
         if Set(failureTypes).count == 1 {
             context["singleFailureType"] = failureTypes.first
         }
-        
+
+        context["inlinedObjects"] = operation.bodyParam?.value.inlinedObjects.map({ (schema) -> Context in
+            self.getInlineSchemaContext(schema)
+        })
         let x = operation.enums.map(getEnumContext)
         context["enums"] = x
         context["nonGlobalEnums"] = x.filter { let isGlobal = $0["isGlobal"] as? Bool ?? false
