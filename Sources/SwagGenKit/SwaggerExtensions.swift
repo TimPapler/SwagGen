@@ -7,6 +7,7 @@ import PathKit
 struct Enum {
     let name: String
     let cases: [Any]
+    let isNonFrozen: Bool
     let type: EnumType
     let description: String?
     let metadata: Metadata
@@ -59,7 +60,7 @@ extension Metadata {
 
     func getEnum(name: String, type: Enum.EnumType, description: String?) -> Enum? {
         if let enumValues = enumeratedValues {
-            return Enum(name: name, cases: enumValues.compactMap { $0 }, type: type, description: description ?? self.description, metadata: self)
+            return Enum(name: name, cases: enumValues.compactMap { $0 }, isNonFrozen: self.nonFrozenEnum == true, type: type, description: description ?? self.description, metadata: self)
         }
         return nil
     }
@@ -284,6 +285,9 @@ extension Parameter {
 
     var isEnum: Bool {
         return enumValues != nil
+    }
+    var isNonFrozenEnum: Bool {
+        return enumValues?.first(where: { $0.isNonFrozen }) != nil
     }
 
     var enumValues: [Enum]? {

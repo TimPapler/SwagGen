@@ -167,8 +167,8 @@ public class CodeFormatter {
         }
         context["relativePathWithParamProperties"] =
             pathParams.reduce(path, { (res, param) -> String in
-            let name = param["name"] as! String
-            return res.replacingOccurrences(of: "{"+name+"}", with: "\\(self." + (param["encodedValue"] as! String) + ")")
+            let value = param["value"] as! String
+            return res.replacingOccurrences(of: "{"+value+"}", with: "\\(self." + (param["encodedValue"] as! String) + ")")
         })
 
         context["description"] = operation.description
@@ -327,6 +327,7 @@ public class CodeFormatter {
         }
         context["enumName"] = getEnumTypeType(enumValue.name)
 
+        context["isNonFrozenEnum"] = enumValue.isNonFrozen
         if let specEnum = specEnum {
             context["enumName"] = getEnumTypeType(specEnum.name)
             context["isGlobal"] = true

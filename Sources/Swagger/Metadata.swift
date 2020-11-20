@@ -6,6 +6,7 @@ public struct Metadata {
     public let description: String?
     public let defaultValue: Any?
     public let enumeratedValues: [Any]?
+    public let nonFrozenEnum: Bool?
     public let nullable: Bool
     public let example: Any?
     public var json: JSONDictionary
@@ -30,5 +31,6 @@ extension Metadata: JSONObjectConvertible {
         identifies = jsonDictionary.json(atKeyPath: "x-Identifies")
         references = jsonDictionary.json(atKeyPath: "x-References")
         json = jsonDictionary
+        nonFrozenEnum = jsonDictionary.json(atKeyPath: "x-nonFrozenEnum")
     }
 }

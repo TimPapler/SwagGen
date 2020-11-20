@@ -226,6 +226,7 @@ public class SwiftFormatter: CodeFormatter {
         context["encodedValue"] = encodedValue
         context["isArray"] = parameter.isArray
         context["isEnum"] = parameter.isEnum
+        context["isNonFrozenEnum"] = parameter.isNonFrozenEnum
         return context
     }
 
